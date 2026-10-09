@@ -54,20 +54,50 @@ def ensure_default_audio():
 
 
 def make_image_segment(image_path: Path, segment_path: Path, duration: float, index: int):
-    """Create a vertical 1080x1920 Ken-Burns-style segment with fade effects."""
+    """Create a vertical cinematic segment while preserving the ENTIRE source photo.
+
+    The old implementation used scale(...increase)+crop(...), which is a center crop.
+    That is bad for product photos containing multiple items (for example three jerseys).
+
+    This implementation creates:
+      1. A blurred, full-screen version of the image as the background.
+      2. A complete, aspect-ratio-preserving foreground image.
+      3. A very small camera drift so the whole photo remains visible while the video
+         still feels animated.
+    """
     frames = int(duration * 30)
-    # Alternate zoom direction to make the slideshow feel less repetitive.
-    if index % 2 == 0:
-        zoom = "min(zoom+0.0009,1.14)"
+
+    # Keep the complete source image inside a 1040x1840 safe area.
+    # It is then placed over a blurred 1080x1920 background.
+    # The foreground movement is intentionally tiny so no part of the source image
+    # disappears from the frame.
+    if index % 4 == 0:
+        x_expr = "20+8*sin(2*PI*on/{})".format(frames)
+        y_expr = "40+5*sin(2*PI*on/{})".format(frames)
+    elif index % 4 == 1:
+        x_expr = "12+10*sin(PI*on/{})".format(frames)
+        y_expr = "40+6*cos(PI*on/{})".format(frames)
+    elif index % 4 == 2:
+        x_expr = "20+8*cos(2*PI*on/{})".format(frames)
+        y_expr = "35+5*sin(2*PI*on/{})".format(frames)
     else:
-        zoom = "max(zoom-0.0007,1.0)"
+        x_expr = "15+10*sin(PI*on/{})".format(frames)
+        y_expr = "38+6*cos(PI*on/{})".format(frames)
 
     vf = (
-        "scale=1080:1920:force_original_aspect_ratio=increase,"
-        "crop=1080:1920,"
-        f"zoompan=z='{zoom}':d={frames}:s=1080x1920:fps=30,"
-        "eq=contrast=1.04:saturation=1.08:brightness=0.01,"
-        f"fade=t=in:st=0:d=0.35,fade=t=out:st={max(duration-0.35, 0.1):.2f}:d=0.35,"
+        "split=2[bg][fg];"
+        # Full-screen blurred background. This avoids black bars while never
+        # cropping the foreground product photo.
+        "[bg]scale=1080:1920:force_original_aspect_ratio=increase," 
+        "crop=1080:1920,boxblur=luma_radius=28:luma_power=2," 
+        "eq=brightness=-0.03:saturation=0.80[bg2];"
+        # Foreground: FIT, don't crop. Entire source image remains visible.
+        "[fg]scale=1040:1840:force_original_aspect_ratio=decrease," 
+        "format=rgba,pad=1040:1840:(ow-iw)/2:(oh-ih)/2:color=black@0," 
+        "eq=contrast=1.04:saturation=1.08:brightness=0.01," 
+        "unsharp=5:5:0.35:5:5:0[fg2];"
+        # Put the complete photo on top and give it a very gentle camera drift.
+        f"[bg2][fg2]overlay=x='{x_expr}':y='{y_expr}':eval=frame," 
         "format=yuv420p"
     )
 
