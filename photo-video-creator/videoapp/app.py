@@ -72,17 +72,17 @@ def make_image_segment(image_path: Path, segment_path: Path, duration: float, in
     # The foreground movement is intentionally tiny so no part of the source image
     # disappears from the frame.
     if index % 4 == 0:
-        x_expr = "20+8*sin(2*PI*on/{})".format(frames)
-        y_expr = "40+5*sin(2*PI*on/{})".format(frames)
+        x_expr = "20+8*sin(2*PI*n/{})".format(frames)
+        y_expr = "40+5*sin(2*PI*n/{})".format(frames)
     elif index % 4 == 1:
-        x_expr = "12+10*sin(PI*on/{})".format(frames)
-        y_expr = "40+6*cos(PI*on/{})".format(frames)
+        x_expr = "12+10*sin(PI*n/{})".format(frames)
+        y_expr = "40+6*cos(PI*n/{})".format(frames)
     elif index % 4 == 2:
-        x_expr = "20+8*cos(2*PI*on/{})".format(frames)
-        y_expr = "35+5*sin(2*PI*on/{})".format(frames)
+        x_expr = "20+8*cos(2*PI*n/{})".format(frames)
+        y_expr = "35+5*sin(2*PI*n/{})".format(frames)
     else:
-        x_expr = "15+10*sin(PI*on/{})".format(frames)
-        y_expr = "38+6*cos(PI*on/{})".format(frames)
+        x_expr = "15+10*sin(PI*n/{})".format(frames)
+        y_expr = "38+6*cos(PI*n/{})".format(frames)
 
     vf = (
         "split=2[bg][fg];"
