@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Photo Video Creator</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#090b10;color:#f5f7fb;min-height:100vh}.wrap{max-width:900px;margin:50px auto;padding:20px}.card{background:linear-gradient(145deg,#151922,#0e1118);border:1px solid #282e3a;border-radius:24px;padding:34px;box-shadow:0 25px 70px rgba(0,0,0,.4)}h1{font-size:38px;margin:0 0 8px}p{color:#9ea8b8}.drop{border:2px dashed #3b4658;border-radius:18px;padding:45px 20px;text-align:center;margin:25px 0;transition:.2s}.drop:hover{border-color:#8da8ff;background:#111621}.drop input{margin-top:18px}.row{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field{background:#11151d;padding:18px;border-radius:14px;border:1px solid #272e3b}label{display:block;font-weight:700;margin-bottom:10px}.btn{width:100%;padding:16px;border:0;border-radius:14px;background:#ffffff;color:#090b10;font-size:17px;font-weight:800;cursor:pointer;margin-top:22px}.hint{font-size:13px;color:#7f8999}.brand{font-size:13px;color:#687386;margin-top:22px}@media(max-width:650px){.row{grid-template-columns:1fr}h1{font-size:30px}}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card">
+<h1>Photo Video Creator</h1>
+<p>Upload photos, optionally add your own music, and create a cinematic slideshow automatically.</p>
+<form action="/create" method="post" enctype="multipart/form-data">
+<div class="drop">
+<strong>Select multiple images</strong><br>
+<span class="hint">JPG, JPEG, PNG or WEBP</span><br>
+<input type="file" name="images" accept="image/*" multiple required>
+</div>
+<div class="row">
+<div class="field"><label>Background music</label><input type="file" name="music" accept="audio/*"><div class="hint">Optional. If empty, the app creates a built-in synthetic background track.</div></div>
+<div class="field"><label>Seconds per image</label><input type="number" name="seconds_per_image" min="2" max="10" step="0.5" value="4"><div class="hint">Each photo gets a slow zoom/pan effect and fade.</div></div>
+</div>
+<button class="btn" type="submit">Create Fancy Video</button>
+</form>
+<div class="brand">Output: 1080 × 1920 MP4 • H.264 + AAC • ready for Reels/Shorts/Status</div>
+</div></div>
+</body>
+</html>

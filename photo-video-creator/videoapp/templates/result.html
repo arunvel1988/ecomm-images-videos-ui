@@ -1,0 +1,4 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your Video</title>
+<style>body{margin:0;background:#090b10;color:#fff;font-family:Arial,sans-serif;text-align:center}.wrap{max-width:650px;margin:35px auto;padding:20px}.card{background:#151922;border:1px solid #282e3a;border-radius:22px;padding:25px}video{width:min(100%,420px);max-height:70vh;border-radius:18px;background:#000}.btn{display:inline-block;margin:18px 8px;padding:14px 22px;border-radius:12px;background:#fff;color:#111;text-decoration:none;font-weight:700}</style></head>
+<body><div class="wrap"><div class="card"><h1>Your video is ready</h1><video controls playsinline src="{{ url_for('video', filename=filename) }}"></video><br><a class="btn" href="{{ url_for('download', filename=filename) }}">Download MP4</a><a class="btn" href="{{ url_for('index') }}">Create another</a></div></div></body></html>

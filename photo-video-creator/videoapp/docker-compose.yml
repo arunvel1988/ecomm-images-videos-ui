@@ -1,0 +1,10 @@
+services:
+  photo-video-app:
+    build: .
+    container_name: photo-video-app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./outputs:/app/outputs
+      - ./uploads:/app/uploads
+    restart: unless-stopped
